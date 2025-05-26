@@ -1,0 +1,13 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="24" cy="24" r="22" fill="#FFD700" stroke="#F59E42" stroke-width="2"/>
+  <text 
+    x="24" 
+    y="24" 
+    text-anchor="middle" 
+    font-size="22" 
+    font-weight="bold" 
+    fill="#333" 
+    font-family="Arial, sans-serif" 
+    dominant-baseline="middle"
+  >G</text>
+</svg>
