@@ -6,6 +6,7 @@ import {
 } from "firebase/firestore";
 import Header from "../components/Header";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import "./leafletMarker";
 import { Helmet } from "react-helmet";
 import "leaflet/dist/leaflet.css";
 

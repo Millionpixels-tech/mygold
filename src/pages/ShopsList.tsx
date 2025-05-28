@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
+import "./leafletMarker";
 import ShopCard from "../components/ShopCard";
 import { districts } from "../utils/districts";
 import Header from "../components/Header";
