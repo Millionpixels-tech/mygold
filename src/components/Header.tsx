@@ -1,11 +1,24 @@
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const Header = () => {
   const [user, setUser] = useState<any>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const [profileDropdown, setProfileDropdown] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!profileDropdown) return;
+    function handleClick(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [profileDropdown]);
 
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(setUser);
@@ -147,8 +160,11 @@ const Header = () => {
           )}
           <div className="flex items-center gap-4">
             {user ? (
-              <>
-                <Link to="/profile" className="flex items-center gap-2 hover:bg-yellow-100/70 px-2 py-1 rounded-lg transition group">
+              <div className="relative" ref={profileRef}>
+                <button
+                  className="flex items-center gap-2 hover:bg-yellow-100/70 px-2 py-1 rounded-lg transition group focus:outline-none"
+                  onClick={() => setProfileDropdown(v => !v)}
+                >
                   {user.photoURL ? (
                     <img
                       src={user.photoURL}
@@ -161,14 +177,28 @@ const Header = () => {
                     </div>
                   )}
                   <span className="text-sm font-semibold text-gray-700 truncate max-w-[100px]">{user.displayName || user.email}</span>
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 text-sm bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold shadow transition"
-                >
-                  Logout
+                  <svg className={`w-4 h-4 ml-1 transition-transform ${profileDropdown ? "rotate-180" : "rotate-0"}`} fill="none" stroke="#A16207" strokeWidth={2.2} viewBox="0 0 24 24">
+                    <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </button>
-              </>
+                {profileDropdown && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white border border-yellow-100 rounded-xl shadow-lg z-50 py-2">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-gray-700 hover:bg-yellow-50 rounded-t-xl"
+                      onClick={() => setProfileDropdown(false)}
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-yellow-50 rounded-b-xl"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link
                 to="/login"
