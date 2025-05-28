@@ -159,11 +159,11 @@ export default function ShopWizard() {
       const data = {
         ownerId: user?.uid,
         ownerName: user?.displayName || "",
-        shopName,
+        shopName: shopName,
         logoUrl: upLogoUrl,
         coverUrl: upCoverUrl,
         description,
-        district,
+        district: district.toLowerCase(),
         address,
         location,
         contactPhone,

@@ -235,7 +235,7 @@ export default function SingleShop() {
               className="w-28 h-28 rounded-full border-4 border-yellow-300 -mt-20 bg-white object-cover shadow" />
             <div className="flex-1">
               <h1 className="text-3xl font-black text-yellow-700">{shop.shopName}</h1>
-              <div className="mt-1 text-gray-600">{shop.district}</div>
+              <div className="mt-1 text-gray-600">{shop.district && shop.district.charAt(0).toUpperCase() + shop.district.slice(1)}</div>
               <div className="flex items-center gap-2 mt-2">
                 <StarRating value={averageRating} />
                 <span className="text-yellow-700 font-bold ml-1">{averageRating.toFixed(1)} / 5</span>
