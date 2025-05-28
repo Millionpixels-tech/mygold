@@ -36,6 +36,10 @@ const Register = () => {
       setErr("Password must be at least 6 characters.");
       return;
     }
+    if (!/^\d{10}$/.test(phone)) {
+      setErr("Phone number must be exactly 10 digits.");
+      return;
+    }
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -50,11 +54,8 @@ const Register = () => {
       });
       // Send verification email
       await sendEmailVerification(userCredential.user);
-      // Sign the user out immediately
       await auth.signOut();
       setInfo("Registration successful! Please check your email and verify your account before logging in.");
-      // Optionally, redirect to a "verify your email" page
-      // navigate("/verify-email");
     } catch (error: any) {
       setErr(getFriendlyFirebaseError(error));
     }
@@ -84,13 +85,19 @@ const Register = () => {
           },
           { merge: true }
         );
-        // Google users don't need verification (they are trusted)
         navigate("/");
       }
     } catch (error: any) {
       setErr(getFriendlyFirebaseError(error));
     }
     setLoading(false);
+  };
+
+  // Restrict input to numbers and max length 10
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
+    if (value.length > 10) value = value.slice(0, 10);
+    setPhone(value);
   };
 
   return (
@@ -135,10 +142,13 @@ const Register = () => {
               type="tel"
               placeholder="Phone Number"
               value={phone}
-              onChange={e => setPhone(e.target.value)}
+              onChange={handlePhoneChange}
               className="px-4 py-3 rounded-xl border border-yellow-200 bg-yellow-50 focus:ring-2 focus:ring-yellow-300 focus:outline-none text-base font-semibold"
               required
               disabled={loading}
+              maxLength={10}
+              inputMode="numeric"
+              pattern="[0-9]{10}"
             />
             <input
               type="password"

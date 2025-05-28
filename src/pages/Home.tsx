@@ -26,6 +26,7 @@ type ItemType = {
   district: string;
   karat: number;
   weight: number;
+  sold?: boolean; // <-- Added sold property
 };
 
 const PAGE_SIZE = 10;
@@ -49,7 +50,6 @@ const Home = () => {
   useEffect(() => {
     (async () => {
       const counts: Record<string, number> = {};
-      // Use one query to get all items, then count by district (Firestore doesn't support group-by)
       const snap = await getDocs(collection(db, "items"));
       snap.docs.forEach(doc => {
         const data = doc.data() as any;
@@ -57,11 +57,10 @@ const Home = () => {
           counts[data.district] = (counts[data.district] || 0) + 1;
         }
       });
-      // Also store "All" count
       counts[""] = snap.docs.length;
       setDistrictCounts(counts);
     })();
-  }, [items.length]); // Refresh on item list change
+  }, [items.length]);
 
   // Infinite scroll observer
   const observer = useRef<IntersectionObserver | null>(null);
@@ -149,37 +148,12 @@ const Home = () => {
 
   return (
     <div className="min-h-screen font-sans relative overflow-x-hidden bg-gradient-to-br from-yellow-50 via-white to-yellow-100">
-      {/* Modern gold radial glow background */}
-      <div aria-hidden
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          background: "radial-gradient(circle at 70% 10%, #fffbe6 0%, #ffecb3 30%, #fef6e1 60%, #fff0c2 100%)",
-          opacity: 0.7,
-          width: "100vw",
-          height: "100vh"
-        }}
-      />
-
-      {/* Decorative SVG pattern */}
-      <svg
-        aria-hidden
-        className="fixed top-[-80px] right-[-80px] w-[350px] h-[350px] z-0 opacity-40 select-none pointer-events-none"
-        width="350"
-        height="350"
-        viewBox="0 0 350 350"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle cx="175" cy="175" r="165" stroke="#FDE68A" strokeWidth="6" />
-        <circle cx="175" cy="175" r="120" stroke="#FDE68A" strokeWidth="2" />
-        <circle cx="175" cy="175" r="90" stroke="#FDE68A" strokeWidth="1" />
-      </svg>
-
+      {/* Decorative and header code ... */}
       <div className="relative z-10">
         <Header />
 
         <main className="max-w-7xl mx-auto py-12 px-2 flex flex-col md:flex-row gap-8">
-          {/* Left: Locations */}
+          {/* District filter buttons */}
           <aside className="w-full md:w-60 md:sticky md:top-24 z-20">
             <div className="bg-white/80 border border-yellow-100 rounded-2xl shadow p-4 mb-8 flex md:flex-col flex-row gap-2 md:gap-3 overflow-x-auto">
               <button
@@ -204,9 +178,9 @@ const Home = () => {
             </div>
           </aside>
 
-          {/* Right: Items */}
+          {/* Items */}
           <section className="flex-1">
-            {/* Modern Header + Description */}
+            {/* Header */}
             <div className="bg-white/90 rounded-2xl shadow-md border border-yellow-100 px-6 py-7 mb-8 text-center">
               <h1 className="text-3xl sm:text-4xl font-black text-yellow-700 tracking-tight mb-2">Explore Gold Auctions</h1>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto font-medium">
@@ -232,12 +206,13 @@ const Home = () => {
                     district={item.district}
                     karat={item.karat}
                     weight={item.weight}
+                    sold={item.sold} // <-- Pass to GoldCard
                   />
                 </div>
               ))}
             </div>
 
-            {/* Loading / Empty states */}
+            {/* Loading / Empty states ... */}
             {loading && (
               <div className="flex flex-col items-center justify-center py-20 text-yellow-600 text-xl font-semibold animate-pulse">
                 <svg width={56} height={56} fill="none" viewBox="0 0 48 48" className="mb-2">
@@ -263,30 +238,6 @@ const Home = () => {
             )}
           </section>
         </main>
-
-        {/* Floating Add Item Button (only for logged-in users) */}
-        {/* {user && (
-          <button
-            className="
-              fixed bottom-7 right-7 z-50
-              flex items-center gap-2
-              bg-gradient-to-br from-yellow-400 to-yellow-500
-              hover:from-yellow-500 hover:to-yellow-400
-              text-white text-lg font-bold shadow-xl rounded-full
-              px-6 py-3
-              transition-all
-              active:scale-95
-            "
-            onClick={() => navigate("/add")}
-            aria-label="Add Gold Item"
-          >
-            <svg width={24} height={24} fill="none" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="12" fill="#fff" fillOpacity={0.1}/>
-              <path d="M12 6v12M6 12h12" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-            <span className="hidden sm:inline">Add Item</span>
-          </button>
-        )} */}
       </div>
     </div>
   );

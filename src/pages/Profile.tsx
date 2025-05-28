@@ -1,7 +1,21 @@
 import { useEffect, useState } from "react";
 import { auth, db, storage } from "../firebase/firebase";
-import { collection, query, where, getDocs, deleteDoc, doc, updateDoc, getDoc } from "firebase/firestore";
-import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+  getDoc
+} from "firebase/firestore";
+import {
+  updateProfile,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential
+} from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import ProfileItemCard from "../components/ProfileItemCard";
@@ -15,6 +29,7 @@ type ItemType = {
   highestBid: number;
   bidsCount: number;
   district: string;
+  sold?: boolean; // <--- NEW
 };
 
 const Profile = () => {
@@ -30,6 +45,7 @@ const Profile = () => {
   const [updating, setUpdating] = useState(false);
   const [modalMsg, setModalMsg] = useState("");
   const [error, setError] = useState("");
+  const [userShop, setUserShop] = useState<any>(null); // <--- Shop state
   const navigate = useNavigate();
 
   // Fetch user's items
@@ -46,11 +62,22 @@ const Profile = () => {
   useEffect(() => {
     if (!auth.currentUser?.uid) return;
     (async () => {
-      const userDoc = await getDoc(doc(db, "users", auth.currentUser?.uid ? auth.currentUser.uid : 'none' ));
+      const userDoc = await getDoc(doc(db, "users", auth.currentUser?.uid ? auth.currentUser.uid : 'none'));
       if (userDoc.exists()) {
         const userData = userDoc.data();
         if (userData && userData.phone) setPhone(userData.phone);
       }
+    })();
+  }, []);
+
+  // Fetch if user has a shop
+  useEffect(() => {
+    if (!auth.currentUser?.uid) return;
+    (async () => {
+      const q = query(collection(db, "shops"), where("ownerId", "==", auth && auth.currentUser ? auth.currentUser.uid : ''));
+      const snap = await getDocs(q);
+      if (!snap.empty) setUserShop({ id: snap.docs[0].id, ...snap.docs[0].data() });
+      else setUserShop(null);
     })();
   }, []);
 
@@ -60,6 +87,15 @@ const Profile = () => {
       await deleteDoc(doc(db, "items", id));
       setItems(prev => prev.filter(item => item.id !== id));
     }
+  };
+
+  // MARK AS SOLD handler
+  const handleMarkSold = async (id: string) => {
+    if (!window.confirm("Mark this item as sold? This will show it as sold to all users.")) return;
+    await updateDoc(doc(db, "items", id), { sold: true });
+    setItems(prev => prev.map(item =>
+      item.id === id ? { ...item, sold: true } : item
+    ));
   };
 
   // Open popup and reset
@@ -83,12 +119,18 @@ const Profile = () => {
     }
   };
 
-  // Handle update profile
+  // Profile update logic (full and unchanged)
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setUpdating(true);
     setError("");
     setModalMsg("");
+    // PHONE VALIDATION
+    if (phone.length !== 10) {
+      setError("Phone number must be exactly 10 digits.");
+      setUpdating(false);
+      return;
+    }
     try {
       // 1. Profile pic
       let url = photoURL;
@@ -155,10 +197,23 @@ const Profile = () => {
       <Header />
       {/* MODAL for update */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-2 animate-fadeIn" onClick={() => setShowModal(false)}>
+        <div
+          className="
+            fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-2 animate-fadeIn
+            min-h-screen overflow-y-auto
+          "
+          style={{ overscrollBehavior: "contain" }}
+          onClick={() => setShowModal(false)}
+        >
           <form
-            className="bg-white rounded-3xl shadow-2xl border border-yellow-100 p-8 max-w-md w-full flex flex-col gap-4 relative"
-            style={{ minWidth: 320 }}
+            className="
+              bg-white rounded-3xl shadow-2xl border border-yellow-100
+              w-full max-w-md flex flex-col gap-4 relative
+              my-10 sm:my-0
+              p-4 sm:p-8
+              max-h-[90vh] overflow-y-auto
+            "
+            style={{ minWidth: 0 }}
             onClick={e => e.stopPropagation()}
             onSubmit={handleUpdateProfile}
           >
@@ -206,8 +261,13 @@ const Profile = () => {
               className="px-4 py-3 rounded-xl border border-yellow-200 bg-yellow-50 focus:ring-2 focus:ring-yellow-300 focus:outline-none text-base font-semibold"
               placeholder="Phone Number"
               value={phone}
-              onChange={e => setPhone(e.target.value.replace(/[^0-9+]/g, ""))}
-              maxLength={20}
+              onChange={e => {
+                // Only allow numbers, trim to 10 digits max
+                const clean = e.target.value.replace(/\D/g, '').slice(0, 10);
+                setPhone(clean);
+              }}
+              maxLength={10}
+              required
             />
             {!isGoogleUser && (
               <>
@@ -263,7 +323,6 @@ const Profile = () => {
 
       <main className="max-w-3xl mx-auto px-3 py-10">
         <div className="bg-white/90 rounded-3xl shadow-xl border border-yellow-100 p-7">
-          <h2 className="text-3xl font-black text-yellow-700 mb-6 text-center tracking-tight">Your Profile</h2>
           <div className="flex flex-col items-center gap-5 mb-10">
             <img
               src={auth.currentUser?.photoURL || "/profile-placeholder.svg"}
@@ -285,6 +344,29 @@ const Profile = () => {
               </button>
             </div>
           </div>
+          
+          {/* === SHOP MANAGER SECTION === */}
+          <div className="mb-8 w-full flex flex-col items-center">
+            <button
+              className={`
+                w-full max-w-xs py-3 rounded-full
+                ${userShop
+                  ? "bg-gradient-to-br from-yellow-600 to-yellow-400 hover:from-yellow-700 hover:to-yellow-500"
+                  : "bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400"}
+                text-white font-bold text-lg shadow active:scale-95 transition
+              `}
+              onClick={() => navigate("/shop-manager")}
+            >
+              {userShop ? "Manage Your Shop" : "Start Your Shop"}
+            </button>
+            <div className="mt-2 text-gray-500 text-sm text-center max-w-xs">
+              {userShop
+                ? "Manage your shop details and reviews here."
+                : "Start your own shop to make your business more discoverable, collect customer reviews, and boost your sales!"}
+            </div>
+          </div>
+          {/* === END SHOP MANAGER SECTION === */}
+
           {/* Items list */}
           <div className="flex justify-between items-center mb-5">
             <div>
@@ -293,7 +375,7 @@ const Profile = () => {
             </div>
             <button
               className="flex items-center gap-2 px-5 py-2 bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-white text-base font-bold rounded-full shadow transition active:scale-95"
-              onClick={() => navigate("/add")}
+              onClick={() => navigate("/add-item")}
             >
               <svg width={18} height={18} fill="none" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="12" fill="#fff" fillOpacity={0.12}/>
@@ -307,7 +389,12 @@ const Profile = () => {
               <div className="text-gray-400 text-center py-6">No items posted yet.</div>
             )}
             {items.map(item => (
-              <ProfileItemCard key={item.id} {...item} onDelete={handleDelete} />
+              <ProfileItemCard
+                key={item.id}
+                {...item}
+                onDelete={handleDelete}
+                onMarkSold={handleMarkSold} // <-- Pass handler
+              />
             ))}
           </div>
         </div>

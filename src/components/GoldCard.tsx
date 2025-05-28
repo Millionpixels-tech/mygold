@@ -10,6 +10,7 @@ type GoldCardProps = {
   district: string;
   karat: number;
   weight: number;
+  sold?: boolean; // <-- Added
 };
 
 const DESCRIPTION_LINES = 2;
@@ -36,6 +37,7 @@ const GoldCard = ({
   district,
   karat,
   weight,
+  sold,
 }: GoldCardProps) => (
   <Link
     to={`/item/${slugify(title, id)}`}
@@ -76,6 +78,11 @@ const GoldCard = ({
           </svg>
           {weight}g
         </span>
+        {sold && (
+          <span className="inline-flex items-center bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-bold ml-1 shadow-sm">
+            SOLD
+          </span>
+        )}
       </div>
       {/* FIXED SIZE, ELLIPSIS, 2 LINES */}
       <div

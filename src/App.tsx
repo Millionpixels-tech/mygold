@@ -10,6 +10,9 @@ import Contact from "./pages/Contact";
 import QA from "./pages/Qa";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import HowItWorks from "./pages/HowItWorks";
+import ShopWizard from "./pages/ShopWizard";
+import SingleShop from "./pages/SingleShop";
+import ShopsList from "./pages/ShopsList";
 
 function App() {
   return (
@@ -23,10 +26,13 @@ function App() {
         <Route path="/qa" element={<QA />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/how-it-works" element={<HowItWorks/>} />
+        <Route path="/shop/:slugAndId" element={<SingleShop/>} />
+        <Route path="/gold-shops-in-sri-lanka" element={<ShopsList/>} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/add" element={<AddItem />} />
+          <Route path="/add-item" element={<AddItem />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/shop-manager" element={<ShopWizard />} />
         </Route>
       </Routes>
     </Router>

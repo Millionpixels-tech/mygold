@@ -12,7 +12,7 @@ const AddItem = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [karat, setKarat] = useState<number | "">("");
-  const [weight, setWeight] = useState<number | "">("");
+  const [weight, setWeight] = useState<string>(""); // <-- changed to string
   const [district, setDistrict] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
@@ -60,7 +60,7 @@ const AddItem = () => {
         title,
         description,
         karat,
-        weight,
+        weight: parseFloat(weight), // <-- convert to number before saving
         district,
         images: urls,
         imageAlts: urls.map(() => title || "Gold item"), // SEO: alt = title
@@ -150,10 +150,22 @@ const AddItem = () => {
                   <label className="font-semibold text-gray-700 mb-1 block">Weight (g)</label>
                   <input
                     className="w-full px-4 py-3 border border-yellow-200 rounded-xl bg-yellow-50 focus:ring-2 focus:ring-yellow-300 focus:outline-none text-base"
-                    type="number" min={0}
-                    placeholder="Ex: 5.5"
+                    type="text"
+                    inputMode="decimal"
+                    step="0.01"
+                    placeholder="Ex: 5.25"
                     value={weight}
-                    onChange={e => setWeight(Number(e.target.value))}
+                    onChange={e => {
+                      const val = e.target.value;
+                      if (val === "") {
+                        setWeight("");
+                        return;
+                      }
+                      // Allow numbers with up to 2 decimal places
+                      if (/^\d*\.?\d{0,2}$/.test(val)) {
+                        setWeight(val);
+                      }
+                    }}
                     required
                   />
                 </div>

@@ -65,9 +65,7 @@ const SingleItem = () => {
 
       // For each bid, if user is owner, try to load phone number from users collection
       if (item?.ownerId === myUid && loadedBids.length > 0) {
-        // Get unique userIds
         const userIds = Array.from(new Set(loadedBids.map(b => b.userId)));
-        // Fetch user docs
         const usersMap: Record<string, string | undefined> = {};
         for (let uid of userIds) {
           const userDoc = await getDoc(doc(db, "users", uid));
@@ -75,7 +73,6 @@ const SingleItem = () => {
             usersMap[uid] = userDoc.data()?.phone || undefined;
           }
         }
-        // Attach phone to each bid
         loadedBids = loadedBids.map(bid => ({
           ...bid,
           phone: usersMap[bid.userId]
@@ -102,6 +99,11 @@ const SingleItem = () => {
     e.preventDefault();
     if (!myUid) return alert("Please login to bid");
     if (!amount || !bidDesc) return alert("Enter bid amount and description");
+
+    if (item?.sold) {
+      alert("This item is sold. You can't place a bid.");
+      return;
+    }
 
     // Fetch phone from user doc if exists
     let phone = "";
@@ -200,12 +202,25 @@ const SingleItem = () => {
             </div>
             {/* Item info */}
             <div className="md:w-3/5 flex flex-col gap-3">
-              <h2 className="text-3xl font-black text-yellow-700 mb-2">{item.title}</h2>
+              <h2 className="text-3xl font-black text-yellow-700 mb-2">
+                {item.title}
+                {item.sold && (
+                  <span className="ml-3 px-3 py-1 bg-green-500 text-white text-sm rounded-full font-bold align-middle">
+                    SOLD
+                  </span>
+                )}
+              </h2>
               <div className="text-gray-700 text-base mb-2">{item.description}</div>
               <div className="flex gap-4 flex-wrap text-sm font-semibold text-gray-600 mb-3">
-                <span className="bg-yellow-50 px-3 py-1 rounded-xl">Weight: <span className="font-bold text-yellow-700">{item.weight}g</span></span>
-                <span className="bg-yellow-50 px-3 py-1 rounded-xl">Karat: <span className="font-bold text-yellow-700">{item.karat}</span></span>
-                <span className="bg-yellow-50 px-3 py-1 rounded-xl">District: <span className="font-bold text-yellow-700">{item.district}</span></span>
+                <span className="bg-yellow-50 px-3 py-1 rounded-xl">
+                  Weight: <span className="font-bold text-yellow-700">{item.weight}g</span>
+                </span>
+                <span className="bg-yellow-50 px-3 py-1 rounded-xl">
+                  Karat: <span className="font-bold text-yellow-700">{item.karat}</span>
+                </span>
+                <span className="bg-yellow-50 px-3 py-1 rounded-xl">
+                  District: <span className="font-bold text-yellow-700">{item.district}</span>
+                </span>
               </div>
               <div className="flex items-center gap-6">
                 <div className="text-lg font-extrabold text-yellow-600 bg-yellow-100 px-4 py-2 rounded-2xl">Highest Bid: Rs. {item.highestBid}</div>
@@ -238,7 +253,12 @@ const SingleItem = () => {
               </div>
             ))}
           </div>
-          {myUid && !isOwner && (
+          {/* Bidding Form or Sold Notice */}
+          {item.sold ? (
+            <div className="bg-green-100 text-green-700 text-center font-bold py-4 rounded-xl text-lg border border-green-200 shadow">
+              Bidding is closed. This item is <span className="text-green-800">SOLD</span>!
+            </div>
+          ) : myUid && !isOwner && (
             <form onSubmit={handleBid} className="flex flex-col gap-3 bg-yellow-50 p-5 rounded-2xl shadow">
               <div className="font-bold text-gray-700 mb-1">Place a Bid</div>
               <input

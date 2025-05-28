@@ -25,8 +25,37 @@ const Header = () => {
     return () => window.removeEventListener("resize", close);
   }, [menuOpen]);
 
+  // Highlighted "Gold Shops in Sri Lanka" menu item
+  const GoldShopsMenuItem = (
+    <Link
+      to="/gold-shops-in-sri-lanka"
+      className="
+        text-yellow-700
+        text-base
+        font-extrabold
+        bg-yellow-100/80
+        border border-yellow-200
+        hover:text-yellow-900
+        hover:bg-yellow-200
+        transition-all
+        px-3 py-2
+        rounded-xl
+        shadow-sm
+        flex items-center gap-2
+      "
+      style={{ boxShadow: '0 1px 6px 0 rgba(252, 211, 77, 0.08)' }}
+      onClick={() => setMenuOpen(false)}
+    >
+      <svg width={18} height={18} fill="none" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="11" fill="#FDE047" stroke="#FACC15" strokeWidth="2"/>
+        <path d="M12 7.5L9 16h6l-3-8.5z" fill="#F59E42" />
+      </svg>
+      Gold Shops in Sri Lanka
+    </Link>
+  );
+
   return (
-    <header className="w-full sticky top-0 z-50 border-b border-yellow-100 shadow-none
+    <header className="w-full sticky top-0 z-999 border-b border-yellow-100 shadow-none
       bg-gradient-to-br from-yellow-50 via-white/80 to-yellow-100/80
       backdrop-blur-md transition-all">
       <div className="flex items-center justify-between w-full px-4 md:px-6 py-3 lg:py-4 relative">
@@ -63,7 +92,8 @@ const Header = () => {
         {/* Desktop nav/user section */}
         <div className="hidden md:flex items-center gap-8">
           <nav className="flex items-center gap-4">
-          <Link
+            {GoldShopsMenuItem}
+            <Link
               to="/how-it-works"
               className="text-gray-700 text-base font-medium hover:text-yellow-700 transition-all px-3 py-2 rounded-lg hover:bg-yellow-100/80"
             >
@@ -84,7 +114,7 @@ const Header = () => {
           </nav>
           {user && (
             <button
-              onClick={() => navigate("/add")}
+              onClick={() => navigate("/add-item")}
               className="
                 flex items-center gap-2
                 px-5 py-2
@@ -137,109 +167,113 @@ const Header = () => {
             )}
           </div>
         </div>
+      </div>
 
-        {/* Mobile slide-down menu */}
-        <div className={`
-          md:hidden
-          fixed top-0 left-0 w-full h-screen z-20 transition-all duration-300
-          ${menuOpen ? "pointer-events-auto bg-black/30 opacity-100" : "pointer-events-none opacity-0"}
-        `}
-          onClick={() => setMenuOpen(false)}
+      {/* Mobile slide-down menu: HIGH z-index, overlays everything */}
+      <div className={`
+        md:hidden
+        fixed top-0 left-0 w-full h-screen z-[999] transition-all duration-300
+        ${menuOpen ? "pointer-events-auto bg-black/30 opacity-100" : "pointer-events-none opacity-0"}
+      `}
+        style={{ zIndex: 999 }}
+        onClick={() => setMenuOpen(false)}
+      >
+        {/* Menu box itself */}
+        <div
+          className={`
+            absolute right-0 top-0 w-5/6 max-w-xs h-full bg-gradient-to-br from-yellow-50 via-white to-yellow-100
+            shadow-xl rounded-l-3xl border-l border-yellow-100 p-6 flex flex-col gap-8 transition-all duration-300
+            ${menuOpen ? "translate-x-0" : "translate-x-full"}
+          `}
+          style={{ zIndex: 1000 }}
+          onClick={e => e.stopPropagation()}
         >
-          {/* Menu box itself */}
-          <div
-            className={`
-              absolute right-0 top-0 w-5/6 max-w-xs h-full bg-gradient-to-br from-yellow-50 via-white to-yellow-100
-              shadow-xl rounded-l-3xl border-l border-yellow-100 p-6 flex flex-col gap-8 transition-all duration-300
-              ${menuOpen ? "translate-x-0" : "translate-x-full"}
-            `}
-            onClick={e => e.stopPropagation()} // Prevent menu close when clicking inside
-          >
-            <nav className="flex flex-col gap-3 mt-4">
+          <nav className="flex flex-col gap-3 mt-4">
+            {/* Highlighted Gold Shops */}
+            {GoldShopsMenuItem}
             <Link
-                to="/how-it-works"
-                className="text-gray-700 text-lg font-medium hover:text-yellow-700 transition px-3 py-2 rounded-lg hover:bg-yellow-100/80"
-                onClick={() => setMenuOpen(false)}
+              to="/how-it-works"
+              className="text-gray-700 text-lg font-medium hover:text-yellow-700 transition px-3 py-2 rounded-lg hover:bg-yellow-100/80"
+              onClick={() => setMenuOpen(false)}
+            >
+              How It Works
+            </Link>
+            <Link
+              to="/qa"
+              className="text-gray-700 text-lg font-medium hover:text-yellow-700 transition px-3 py-2 rounded-lg hover:bg-yellow-100/80"
+              onClick={() => setMenuOpen(false)}
+            >
+              Q&amp;A
+            </Link>
+            <Link
+              to="/contact"
+              className="text-gray-700 text-lg font-medium hover:text-yellow-700 transition px-3 py-2 rounded-lg hover:bg-yellow-100/80"
+              onClick={() => setMenuOpen(false)}
+            >
+              Contact Us
+            </Link>
+            {user && (
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate("/add-item");
+                }}
+                className="
+                  flex items-center gap-2
+                  mt-3 mb-1
+                  px-5 py-2
+                  bg-gradient-to-br from-yellow-400 to-yellow-500
+                  hover:from-yellow-500 hover:to-yellow-400
+                  text-white text-base font-bold
+                  rounded-full shadow
+                  transition-all
+                  active:scale-95
+                "
               >
-                How It Works
-              </Link>
-              <Link
-                to="/qa"
-                className="text-gray-700 text-lg font-medium hover:text-yellow-700 transition px-3 py-2 rounded-lg hover:bg-yellow-100/80"
-                onClick={() => setMenuOpen(false)}
-              >
-                Q&amp;A
-              </Link>
-              <Link
-                to="/contact"
-                className="text-gray-700 text-lg font-medium hover:text-yellow-700 transition px-3 py-2 rounded-lg hover:bg-yellow-100/80"
-                onClick={() => setMenuOpen(false)}
-              >
-                Contact Us
-              </Link>
-              {user && (
+                <svg width={20} height={20} fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="12" fill="#fff" fillOpacity={0.12}/>
+                  <path d="M12 6v12M6 12h12" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+                Add item for free
+              </button>
+            )}
+          </nav>
+          <div className="mt-auto flex flex-col gap-2 border-t border-yellow-100 pt-6">
+            {user ? (
+              <>
+                <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 hover:bg-yellow-100/70 px-2 py-2 rounded-lg transition group">
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt="profile"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-yellow-300 shadow"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-700 text-lg font-bold border-2 border-yellow-300 shadow">
+                      {user.displayName ? user.displayName[0].toUpperCase() : "U"}
+                    </div>
+                  )}
+                  <span className="text-base font-semibold text-gray-700 truncate max-w-[120px]">{user.displayName || user.email}</span>
+                </Link>
                 <button
                   onClick={() => {
                     setMenuOpen(false);
-                    navigate("/add");
+                    handleLogout();
                   }}
-                  className="
-                    flex items-center gap-2
-                    mt-3 mb-1
-                    px-5 py-2
-                    bg-gradient-to-br from-yellow-400 to-yellow-500
-                    hover:from-yellow-500 hover:to-yellow-400
-                    text-white text-base font-bold
-                    rounded-full shadow
-                    transition-all
-                    active:scale-95
-                  "
-                >
-                  <svg width={20} height={20} fill="none" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="12" fill="#fff" fillOpacity={0.12}/>
-                    <path d="M12 6v12M6 12h12" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                  Add item for free
-                </button>
-              )}
-            </nav>
-            <div className="mt-auto flex flex-col gap-2 border-t border-yellow-100 pt-6">
-              {user ? (
-                <>
-                  <Link to="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 hover:bg-yellow-100/70 px-2 py-2 rounded-lg transition group">
-                    {user.photoURL ? (
-                      <img
-                        src={user.photoURL}
-                        alt="profile"
-                        className="w-10 h-10 rounded-full object-cover border-2 border-yellow-300 shadow"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-700 text-lg font-bold border-2 border-yellow-300 shadow">
-                        {user.displayName ? user.displayName[0].toUpperCase() : "U"}
-                      </div>
-                    )}
-                    <span className="text-base font-semibold text-gray-700 truncate max-w-[120px]">{user.displayName || user.email}</span>
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setMenuOpen(false);
-                      handleLogout();
-                    }}
-                    className="px-4 py-2 text-base bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold shadow transition"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  onClick={() => setMenuOpen(false)}
                   className="px-4 py-2 text-base bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold shadow transition"
                 >
-                  Login
-                </Link>
-              )}
-            </div>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-2 text-base bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold shadow transition"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
