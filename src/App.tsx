@@ -13,6 +13,7 @@ import HowItWorks from "./pages/HowItWorks";
 import ShopWizard from "./pages/ShopWizard";
 import SingleShop from "./pages/SingleShop";
 import ShopsList from "./pages/ShopsList";
+import Forum from "./pages/Forum";
 
 function App() {
   return (
@@ -27,7 +28,10 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/how-it-works" element={<HowItWorks/>} />
         <Route path="/shop/:slugAndId" element={<SingleShop/>} />
+
+
         <Route path="/gold-shops-in-sri-lanka" element={<ShopsList/>} />
+        <Route path="/forum" element={<Forum />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/add-item" element={<AddItem />} />

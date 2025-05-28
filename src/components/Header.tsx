@@ -54,6 +54,17 @@ const Header = () => {
     </Link>
   );
 
+  // Forum menu item
+  const ForumMenuItem = (
+    <Link
+      to="/forum"
+      className="text-gray-700 text-base font-medium hover:text-yellow-700 transition-all px-3 py-2 rounded-lg hover:bg-yellow-100/80"
+      onClick={() => setMenuOpen(false)}
+    >
+      Forum
+    </Link>
+  );
+
   return (
     <header className="w-full sticky top-0 z-999 border-b border-yellow-100 shadow-none
       bg-gradient-to-br from-yellow-50 via-white/80 to-yellow-100/80
@@ -93,6 +104,7 @@ const Header = () => {
         <div className="hidden md:flex items-center gap-8">
           <nav className="flex items-center gap-4">
             {GoldShopsMenuItem}
+            {ForumMenuItem}
             <Link
               to="/how-it-works"
               className="text-gray-700 text-base font-medium hover:text-yellow-700 transition-all px-3 py-2 rounded-lg hover:bg-yellow-100/80"
@@ -191,6 +203,8 @@ const Header = () => {
           <nav className="flex flex-col gap-3 mt-4">
             {/* Highlighted Gold Shops */}
             {GoldShopsMenuItem}
+            {ForumMenuItem}
+            {ForumMenuItem}
             <Link
               to="/how-it-works"
               className="text-gray-700 text-lg font-medium hover:text-yellow-700 transition px-3 py-2 rounded-lg hover:bg-yellow-100/80"
