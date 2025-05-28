@@ -14,8 +14,14 @@ import ShopWizard from "./pages/ShopWizard";
 import SingleShop from "./pages/SingleShop";
 import ShopsList from "./pages/ShopsList";
 import Forum from "./pages/Forum";
+import Hotjar from '@hotjar/browser';
 
 function App() {
+  // Initialize Hotjar with your site ID and version
+  const siteId = 6418809;
+  const hotjarVersion = 6;
+
+  Hotjar.init(siteId, hotjarVersion);
   return (
     <Router>
       <Routes>
