@@ -22,7 +22,9 @@ const ForgotPassword = () => {
 
     try {
       if (signInMethod === "password") {
-        await sendPasswordResetEmail(auth, email.trim());
+        await sendPasswordResetEmail(auth, email.trim(), {
+          url: 'https://mygold.lk/__/auth/action' // <-- Custom domain!
+        });
         setInfo("A password reset email has been sent. Please check your inbox.");
       } else if (signInMethod === "google") {
         setInfo(""); // Just show the Google info message below
