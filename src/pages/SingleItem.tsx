@@ -230,11 +230,13 @@ const SingleItem = () => {
           </div>
         </div>
 
-        {/* Bid Info Notice */}
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-2xl p-4 mb-6 text-yellow-900 text-base shadow-sm">
-          <strong>Note:</strong> When you place a bid, the item owner will be able to see your contact details. If your offer is accepted, the owner will contact you directly. Please make sure your phone number is up to date in your profile.<br/><br/>
-          <strong>Important:</strong> ඔබ ලංසුවක් ඉදිරිපත් කරන විට, අයිතමයේ හිමිකරුට ඔබගේ දුරකථන අංකය ඇතුළු විස්තර බැලිය හැකියි. ඔබගේ ලංසුව පිළිගත් විට, භාණ්ඩ හිමිකරු ඔබව අමතනු ඇත. කරුණාකර ඔබගේ දුරකථන අංකය ඔබගේ ගිණුමෙහි යාවත්කාලීන කර තිබේදැයි පරීක්ෂා කරන්න.
-        </div>
+        {/* Bid Info Notice - only for logged in users */}
+        {myUid && (
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-2xl p-4 mb-6 text-yellow-900 text-base shadow-sm">
+            <strong>Note:</strong> When you place a bid, the item owner will be able to see your contact details. If your offer is accepted, the owner will contact you directly. Please make sure your phone number is up to date in your profile.<br/><br/>
+            <strong>Important:</strong> ඔබ ලංසුවක් ඉදිරිපත් කරන විට, අයිතමයේ හිමිකරුට ඔබගේ දුරකථන අංකය ඇතුළු විස්තර බැලිය හැකියි. ඔබගේ ලංසුව පිළිගත් විට, භාණ්ඩ හිමිකරු ඔබව අමතනු ඇත. කරුණාකර ඔබගේ දුරකථන අංකය ඔබගේ ගිණුමෙහි යාවත්කාලීන කර තිබේදැයි පරීක්ෂා කරන්න.
+          </div>
+        )}
 
         {/* Bids Section */}
         <div className="bg-white/90 rounded-3xl shadow-lg border border-yellow-100 p-6 mb-10">
@@ -259,10 +261,20 @@ const SingleItem = () => {
               </div>
             ))}
           </div>
-          {/* Bidding Form or Sold Notice */}
+          {/* Bidding Form, Sold Notice, or Login Prompt */}
           {item.sold ? (
             <div className="bg-green-100 text-green-700 text-center font-bold py-4 rounded-xl text-lg border border-green-200 shadow">
               Bidding is closed. This item is <span className="text-green-800">SOLD</span>!
+            </div>
+          ) : !myUid && !isOwner ? (
+            <div className="flex flex-col items-center justify-center bg-yellow-50 p-6 rounded-2xl shadow">
+              <div className="font-bold text-gray-700 mb-3 text-center text-lg">Please log in to bid on this item.</div>
+              <a
+                href="/login"
+                className="px-6 py-3 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-white font-bold text-lg shadow active:scale-95 transition text-center"
+              >
+                Log in to Bid
+              </a>
             </div>
           ) : myUid && !isOwner && (
             <form onSubmit={handleBid} className="flex flex-col gap-3 bg-yellow-50 p-5 rounded-2xl shadow">
