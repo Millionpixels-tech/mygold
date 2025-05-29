@@ -14,8 +14,14 @@ exports.handler = async function(event, context) {
   const baseUrl = "https://mygold.lk"; // CHANGE THIS TO YOUR DOMAIN
   let urls = [
     `${baseUrl}/`,
-    `${baseUrl}/shops`,
-    `${baseUrl}/listings`
+    `${baseUrl}/gold-shops-in-sri-lanka`,
+    `${baseUrl}/listings`,
+    `${baseUrl}/forum`,
+    `${baseUrl}/how-it-works`,
+    `${baseUrl}/qa`,
+    `${baseUrl}/contact`
+    `${baseUrl}/login`,
+    `${baseUrl}/register`
   ];
 
   // Get shops
