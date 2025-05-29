@@ -102,6 +102,9 @@ const AddItem = () => {
         <div className="w-full max-w-lg bg-white/90 shadow-2xl rounded-3xl px-7 py-8 mt-6 border border-yellow-100">
           <h2 className="text-2xl font-black text-yellow-700 mb-1 tracking-tight text-center">Add Gold Item</h2>
           <p className="text-gray-500 mb-5 text-center">Fill the details below to post your gold item for free!</p>
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-2xl p-4 mb-5 text-yellow-900 text-base shadow-sm">
+            <strong>Note:</strong> Your item will be posted instantly on our website. Please do not add items that are not gold-related. Posting unrelated items may result in your item being deleted and your account being blocked.
+          </div>
           <StepIndicator />
           {step === 1 && (
             <form
