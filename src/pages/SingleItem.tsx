@@ -230,6 +230,12 @@ const SingleItem = () => {
           </div>
         </div>
 
+        {/* Bid Info Notice */}
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-2xl p-4 mb-6 text-yellow-900 text-base shadow-sm">
+          <strong>Note:</strong> When you place a bid, the item owner will be able to see your contact details. If your offer is accepted, the owner will contact you directly. Please make sure your phone number is up to date in your profile.<br/><br/>
+          <strong>Important:</strong> ඔබ ලංසුවක් ඉදිරිපත් කරන විට, අයිතමයේ හිමිකරුට ඔබගේ දුරකථන අංකය ඇතුළු විස්තර බැලිය හැකියි. ඔබගේ ලංසුව පිළිගත් විට, භාණ්ඩ හිමිකරු ඔබව අමතනු ඇත. කරුණාකර ඔබගේ දුරකථන අංකය ඔබගේ ගිණුමෙහි යාවත්කාලීන කර තිබේදැයි පරීක්ෂා කරන්න.
+        </div>
+
         {/* Bids Section */}
         <div className="bg-white/90 rounded-3xl shadow-lg border border-yellow-100 p-6 mb-10">
           <h3 className="font-bold text-xl text-yellow-700 mb-4">Bids</h3>

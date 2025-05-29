@@ -136,6 +136,18 @@ const Header = () => {
             >
               Contact Us
             </Link>
+            {!user && (
+              <button
+                onClick={() => navigate("/login")}
+                className="flex items-center gap-2 px-5 py-2 bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-white text-sm font-bold rounded-full shadow transition-all active:scale-95"
+              >
+                <svg width={20} height={20} fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="12" fill="#fff" fillOpacity={0.12}/>
+                  <path d="M12 6v12M6 12h12" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+                Sell your gold item
+              </button>
+            )}
           </nav>
           {user && (
             <button
@@ -231,6 +243,21 @@ const Header = () => {
           onClick={e => e.stopPropagation()}
         >
           <nav className="flex flex-col gap-3 mt-4">
+            {!user && (
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate("/login");
+                }}
+                className="flex items-center gap-2 px-5 py-2 bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-white text-sm font-bold rounded-full shadow transition-all active:scale-95"
+              >
+                <svg width={20} height={20} fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="12" fill="#fff" fillOpacity={0.12}/>
+                  <path d="M12 6v12M6 12h12" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+                Sell your gold item
+              </button>
+            )}
             {/* Highlighted Gold Shops */}
             {GoldShopsMenuItem}
             {ForumMenuItem}

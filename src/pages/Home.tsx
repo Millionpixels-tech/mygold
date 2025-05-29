@@ -182,10 +182,11 @@ const Home = () => {
           <section className="flex-1">
             {/* Header */}
             <div className="bg-white/90 rounded-2xl shadow-md border border-yellow-100 px-6 py-7 mb-8 text-center">
-              <h1 className="text-3xl sm:text-4xl font-black text-yellow-700 tracking-tight mb-2">Explore Gold Auctions</h1>
-              <p className="text-gray-600 text-lg max-w-2xl mx-auto font-medium">
-                Discover, bid, and buy gold items posted by users across Sri Lanka.<br/>
-                Filter by district or browse the entire collection. Join the bidding or list your own!
+              <h1 className="text-3xl sm:text-2xl font-black text-yellow-700 tracking-tight mb-2">Welcome to Sri Lanka’s No. 1 Gold Auction Website</h1>
+              <p className="text-gray-600 text-m mx-auto font-medium">
+                ශ්‍රී ලංකාවේ විශාලතම රන් භාණ්ඩ වෙන්දේසි වෙබ් අඩවියට ඔබව සාදරයෙන් පිළිගනිමු. ඔබේ රන් භාණ්ඩ සඳහා ඉහලම වට්නාකමක් මෙම වෙබ් අඩවියෙන් ලබාගත හැක. මිලදී ගැනීමට කැමති පාරිභෝගිකයින්ටද මෙහිදී රන් භාණ්ඩ සදහා ලංසු යෝජනා කිරීමේ හැකියාව ඇත.
+
+
               </p>
             </div>
 
