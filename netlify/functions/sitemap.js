@@ -19,7 +19,7 @@ exports.handler = async function(event, context) {
     `${baseUrl}/forum`,
     `${baseUrl}/how-it-works`,
     `${baseUrl}/qa`,
-    `${baseUrl}/contact`
+    `${baseUrl}/contact`,
     `${baseUrl}/login`,
     `${baseUrl}/register`
   ];
