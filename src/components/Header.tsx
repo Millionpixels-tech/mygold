@@ -261,7 +261,6 @@ const Header = () => {
             {/* Highlighted Gold Shops */}
             {GoldShopsMenuItem}
             {ForumMenuItem}
-            {ForumMenuItem}
             <Link
               to="/how-it-works"
               className="text-gray-700 text-lg font-medium hover:text-yellow-700 transition px-3 py-2 rounded-lg hover:bg-yellow-100/80"
