@@ -216,7 +216,7 @@ const Header = () => {
                 to="/login"
                 className="px-4 py-2 text-sm bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold shadow transition"
               >
-                Login
+                Login / Register
               </Link>
             )}
           </div>
@@ -341,7 +341,7 @@ const Header = () => {
                 onClick={() => setMenuOpen(false)}
                 className="px-4 py-2 text-base bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold shadow transition"
               >
-                Login
+                Login / Register
               </Link>
             )}
           </div>
